@@ -11,11 +11,27 @@ mongoose.connect("mongodb://localhost:27017/bookStore", { useNewUrlParser: true,
 //A Mongoose Schema defines the structure of the document, default values, validations, etc.
 
 const bookSchema = new mongoose.Schema({
-    book_id: { type: Number, required: true },
-    book_name: String,
+    book_id: { type: Number, required: true, min: 0 },
+
+    book_name: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+        minlength: [3, "Length shoul be 3 or greater"],
+        maxlength: [10]
+    },
+
     author_name: String,
+
     publish_date: { type: Date, default: Date.now },
-    genre: String
+
+    genre: {
+        type: String,
+        required: true,
+        lowercase: true,
+        enum: ["drama", "thrill", "suspense", "action", "comedy", "fiction"]
+    }
 });
 
 
@@ -33,8 +49,8 @@ const Book = new mongoose.model('Book', bookSchema);
 const createDocument = async () => {
     try {
         const firstBook = new Book({
-            book_id: 1,
-            book_name: "FirstBook",
+            book_id: -1,
+            book_name: "FBn",
             author_name: "FirstBookAuthor",
             genre: "Fiction"
         });
@@ -129,4 +145,5 @@ const deleteDocument = async (id) => {
 
 }
 
-deleteDocument(1);
+//deleteDocument(1);
+createDocument();
