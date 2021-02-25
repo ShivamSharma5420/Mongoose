@@ -19,7 +19,13 @@ const bookSchema = new mongoose.Schema({
         trim: true,
         lowercase: true,
         minlength: [3, "Length shoul be 3 or greater"],
-        maxlength: [10]
+        maxlength: [10],
+        validate(value) {
+            if (value === 'book')
+                throw new Error("'book' cannot be a name of a book")
+        }
+
+
     },
 
     author_name: String,
@@ -49,8 +55,8 @@ const Book = new mongoose.model('Book', bookSchema);
 const createDocument = async () => {
     try {
         const firstBook = new Book({
-            book_id: -1,
-            book_name: "FBn",
+            book_id: 1,
+            book_name: "Book",
             author_name: "FirstBookAuthor",
             genre: "Fiction"
         });
@@ -136,7 +142,7 @@ const deleteDocument = async (id) => {
 
     try {
 
-        const result = await Book.deleteOne({ book_id: id });
+        const result = await Book.deleteMany({ book_id: id });
         console.log(result);
 
     } catch (err) {
